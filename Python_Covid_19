@@ -1,0 +1,53 @@
+import tkinter
+from tkinter import *
+import json
+import requests
+
+
+window = tkinter.Tk()
+window.title("Covid-19 Günlük Tablo")
+window.geometry("300x150")
+
+# Including labels
+lbl = Label(window,
+            text="Toplam Test Sayısı:-......")
+lbl1 = Label(window,
+             text="Toplam Vaka Sayısı:-...")
+lbl2 = Label(window,
+             text="Toplam Ölüm Sayısı:-...")
+lbl3 = Label(window,
+             text="Toplam İyileşen Sayısı:-...")
+
+lbl.grid(column=0, row=0, sticky= W, pady = 3)
+lbl1.grid(column=0, row=1, sticky= W, pady = 3)
+lbl2.grid(column=0, row=2, sticky= W, pady = 3)
+lbl3.grid(column=0, row=3, sticky= W, pady = 3)
+lbl4 = Label(window, text="")
+lbl4.grid(column=0, row=4, sticky= W, pady = 3)
+
+
+def clicked():
+    # Opening the url and loading the
+    # json data using json Library
+    url = "https://api.apify.com/v2/key-value-stores/28ljlt47S5XEd1qIi/records/LATEST?disableRedirect=true"
+    page = requests.get(url)
+    data = json.loads(page.text)
+
+    lbl.configure(text="Toplam Test Sayısı:- "
+                       + str(data["dailyTested"]))
+
+    lbl1.configure(text="Toplam Vaka Sayısı:- "
+                        + str(data["dailyInfected"]))
+    lbl2.configure(text="Toplam Ölüm Sayısı:- "
+                        + str(data["dailyDeceased"]))
+    lbl3.configure(text="Toplam İyileşen Sayısı:- "
+                        + str(data["dailyRecovered"]))
+
+    lbl4.configure(text="Veriler Yenilendi")
+
+
+btn = Button(window, text="Yenile", command=clicked)
+btn.grid(column=3, row=0, sticky=E)
+
+
+window.mainloop()
